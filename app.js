@@ -441,7 +441,7 @@ function footerHTML(){
   return `<footer class="site-footer">
     <div class="foot-grid">
       <div class="foot-brand">
-        <span class="logo"><span class="mark"></span><b>prona</b></span>
+        <span class="logo"><svg class="mark" viewBox="0 0 96 96" aria-hidden="true"><rect width="96" height="96" rx="22" fill="var(--accent)"/><path d="M25 60 L48 36 L71 60" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/></svg><b>prona</b></span>
         <p>Portali i pronave të paluajtshme në Shqipëri. Blej, shit ose jep me qira — me hartë reale dhe shpallje nga pronarë e agjenci.</p>
       </div>
       <div class="foot-col"><b>Qytetet</b>
@@ -486,7 +486,7 @@ let ROUTE_DEAL="sale";
 function renderHeader(){
   const u=currentUser();
   $("#header").innerHTML=`
-    <button class="logo" data-go="#/"><span class="mark"></span><b>prona</b><span>prona të paluajtshme · Shqipëri</span></button>
+    <button class="logo" data-go="#/"><svg class="mark" viewBox="0 0 96 96" aria-hidden="true"><rect width="96" height="96" rx="22" fill="var(--accent)"/><path d="M25 60 L48 36 L71 60" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/></svg><b>prona</b><span>prona të paluajtshme · Shqipëri</span></button>
     <nav class="hnav" aria-label="Kryesore">
       <button data-deal="sale">Blej</button>
       <button data-deal="rent">Qira</button>

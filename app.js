@@ -58,7 +58,7 @@ async function apiCall(path,method="GET",body){
   const r=await fetch(path,{method,credentials:"same-origin",
     headers:body?{"Content-Type":"application/json"}:{},body:body?JSON.stringify(body):undefined});
   const j=await r.json().catch(()=>({}));
-  if(!r.ok) throw Object.assign(new Error(j.error||"Kërkesa dështoi"),{needsVerify:!!j.needsVerify});
+  if(!r.ok) throw Object.assign(new Error(j.error||"Kërkesa dështoi"),{needsVerify:!!j.needsVerify,needsPlan:!!j.needsPlan});
   return j;
 }
 async function initRemote(){
@@ -301,6 +301,30 @@ async function reverseGeocode(lng,lat){
   }catch(e){ return null; }
 }
 
+/* ================= subscription plans & lead tracking ================= */
+const PLANS={
+  free:{name:"Falas",listings:5,price:0,perks:["5 shpallje aktive","Publikim në hartë","Kontakt direkt me blerësit"]},
+  pro:{name:"Pro",listings:30,price:29,perks:["30 shpallje aktive","Statistika të detajuara","Prioritet në mbështetje"]},
+  premium:{name:"Premium",listings:"∞",price:79,perks:["Shpallje pa limit","Statistika të detajuara","Shenja «Premium» te shpalljet","Dukshmëri e zgjeruar e agjencisë"]},
+};
+function planOf(u){
+  if(!u)return "free";
+  if(Remote.enabled)return u.plan||"free";
+  return (u.plan&&(!u.planExpiresAt||u.planExpiresAt>Date.now()))?u.plan:"free";
+}
+function track(id,type){
+  try{
+    if(Remote.enabled){ apiCall("/api/track","POST",{id,type}).catch(()=>{}); return; }
+    const listings=Store.userListings(); const l=listings.find(x=>x.id===id);
+    if(!l)return;
+    const k={view:"v",phone:"p",whatsapp:"w"}[type]; if(!k)return;
+    l.stats=l.stats||{v:0,p:0,w:0}; l.stats[k]++;
+    const day=new Date().toISOString().slice(0,10);
+    l.statsDaily=l.statsDaily||{}; l.statsDaily[day]=l.statsDaily[day]||{v:0,p:0,w:0}; l.statsDaily[day][k]++;
+    Store.saveUserListings(listings);
+  }catch(e){}
+}
+
 /* ================= favorites & saved searches ================= */
 function mutateLocalUser(fn){
   const users=Store.users(); const s=Store.session();
@@ -441,8 +465,7 @@ function footerHTML(){
   return `<footer class="site-footer">
     <div class="foot-grid">
       <div class="foot-brand">
-        <span class="logo"><svg class="mark" viewBox="0 0 96 96" aria-hidden="true"><rect width="96" height="96" rx="22" fill="var(--accent)"/><path d="M26 52 L48 30 L70 52" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/><circle cx="48" cy="62" r="8" fill="#fff"/></svg><b>prona</b></span>
-        <p>Portali i pronave të paluajtshme në Shqipëri. Blej, shit ose jep me qira — me hartë reale dhe shpallje nga pronarë e agjenci.</p>
+        <span class="logo foot-logo"><svg class="mark" viewBox="0 0 96 96" aria-hidden="true"><rect width="96" height="96" rx="22" fill="var(--accent)"/><path d="M26 52 L48 30 L70 52" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/><circle cx="48" cy="62" r="8" fill="#fff"/></svg><b>prona</b></span>
       </div>
       <div class="foot-col"><b>Qytetet</b>
         ${["tirana","durres","vlore","shkoder","sarande"].map(k=>`<button type="button" data-foot-city="${k}">Prona në ${CITIES[k].name}</button>`).join("")}
@@ -456,13 +479,14 @@ function footerHTML(){
       <div class="foot-col"><b>Informacion</b>
         <button type="button" data-foot-go="#/about">Rreth Nesh</button>
         <button type="button" data-foot-go="#/contact">Na Kontaktoni</button>
+        <button type="button" data-foot-go="#/plans">Planet për agjenci</button>
         <button type="button" data-foot-go="#/balance">Bilanci & promovimi</button>
         <button type="button" data-foot-go="#/terms">Kushtet e përdorimit</button>
         <button type="button" data-foot-go="#/privacy">Politika e privatësisë</button>
       </div>
     </div>
     <div class="foot-bottom">
-      <span>© 2026 Prona</span>
+      <span>© 2026 Prona · Të gjitha të drejtat e rezervuara</span>
       <span>Të dhënat e hartës © OpenStreetMap contributors</span>
       <span>Imazhet satelitore © Esri</span>
     </div>
@@ -697,6 +721,7 @@ async function viewListing(){
       <div class="map-wrap"><div class="mapbox" id="listMap"></div><button class="back-country" id="backCountry" type="button">← Gjithë Shqipëria</button></div>
     </div>
     <button class="view-switch" id="viewSwitch" type="button">Harta</button>`;
+  attachFooter($(".listing",v));
 
   let deal=ROUTE_DEAL, ptype="", city="", beds=0, baths=0, sort="new", activeId=null, popup=null;
   let q="", priceMin=0, priceMax=0, areaMin=0, areaMax=0, floorMin=0, featsSel=new Set();
@@ -825,7 +850,7 @@ async function viewListing(){
         <span class="card-info"><span class="price">${priceLabel(l)} ${l.dealType==="sale"&&l.totalArea?`<small>€${fmt(l.price/l.totalArea)}/m²</small>`:""}</span>
         <span class="name">${esc(l.title)}</span>
         <span class="dev">${esc(l.contactName)}</span>
-        <span class="tags">${(l.promoBid||0)>0?'<span class="tag promo">E promovuar</span>':""}<span class="tag city">${CITIES[l.city].name}</span><span class="tag">${PTYPES[l.propertyType]}</span>
+        <span class="tags">${(l.promoBid||0)>0?'<span class="tag promo">E promovuar</span>':""}${l.ownerPlan==="premium"?'<span class="tag premium">PREMIUM</span>':""}<span class="tag city">${CITIES[l.city].name}</span><span class="tag">${PTYPES[l.propertyType]}</span>
         ${l.bedrooms?`<span class="tag">${l.bedrooms} dhoma</span>`:""}<span class="tag">${l.totalArea} m²</span></span></span>`;
       el.addEventListener("click",e=>{if(!e.target.closest(".fav-btn"))select(l,true);});
       el.addEventListener("keydown",e=>{if(e.key==="Enter")select(l,true);});
@@ -904,7 +929,6 @@ async function viewListing(){
     }catch(e){}
   }
   refresh();
-  attachFooter($(".listing",v));
 }
 
 /* ---------- detail view ---------- */
@@ -977,7 +1001,10 @@ async function viewDetail(id){
     $("#mainPhoto").src=photos[+im.dataset.i];
     $$(".strip img",v).forEach(x=>x.classList.toggle("sel-photo",x===im));
   }));
-  $("#showPhone").addEventListener("click",e=>{e.target.textContent=l.phone;e.target.classList.remove("primary");});
+  track(l.id,"view");
+  $("#showPhone").addEventListener("click",e=>{e.target.textContent=l.phone;e.target.classList.remove("primary");track(l.id,"phone");});
+  const waLink=$$(".panel-box a[href^='https://wa.me/']",v)[0];
+  if(waLink)waLink.addEventListener("click",()=>track(l.id,"whatsapp"));
   $("#favDetail").addEventListener("click",async e=>{
     const favs=await toggleFav(l.id); if(!favs)return;
     e.target.textContent=favs.includes(l.id)?"♥ E ruajtur":"♡ Ruaj"; renderHeader();
@@ -1308,6 +1335,7 @@ async function viewAdd(editId){
       location.hash="#/property/"+rec.id;
     }catch(err){
       if(err.needsVerify){verifyModal();return;}
+      if(err.needsPlan){toast(err.message);setTimeout(()=>location.hash="#/plans",1600);return;}
       toast(err.message||"Nuk u ruajt — provoni përsëri");
     }
   });
@@ -1447,6 +1475,57 @@ async function viewAdmin(){
   });
 }
 
+/* ---------- subscription plans page ---------- */
+function viewPlans(){
+  destroyMap();
+  const u=currentUser(); const v=$("#view");
+  const cur=planOf(u);
+  v.innerHTML=`<div class="myprops"><div class="inner" style="max-width:860px">
+    <h1 style="font-size:20px;margin:0 0 4px">Planet për agjenci dhe pronarë</h1>
+    <p style="font-size:13px;color:var(--ink-soft);margin:0 0 20px">Publikimi bazë është gjithmonë falas. Planet me pagesë hapin më shumë shpallje aktive dhe statistika — paguhen nga bilanci juaj, muaj pas muaji, pa kontrata.</p>
+    <div class="plan-grid">
+      ${Object.entries(PLANS).map(([k,p])=>`
+      <div class="plan-card ${k==="pro"?"popular":""} ${cur===k?"current":""}">
+        ${k==="pro"?'<span class="plan-flag">Më i zgjedhuri</span>':""}
+        <h3>${p.name}</h3>
+        <div class="plan-price">${p.price?`€${p.price}<small>/muaj</small>`:"€0"}</div>
+        <ul>${p.perks.map(x=>`<li>${x}</li>`).join("")}</ul>
+        ${cur===k?`<button class="btn" disabled style="width:100%;justify-content:center">Plani aktual</button>`
+          :k==="free"?`<button class="btn" data-plan-cancel style="width:100%;justify-content:center">${u&&u.planCancelled?"Anulohet në skadim":"Kalo në Falas"}</button>`
+          :`<button class="btn primary" data-plan="${k}" style="width:100%;justify-content:center">Zgjidh ${p.name}</button>`}
+      </div>`).join("")}
+    </div>
+    ${u&&cur!=="free"&&u.planExpiresAt?`<p style="font-size:12px;color:var(--ink-faint);margin-top:14px">Plani juaj ${PLANS[cur].name} ${u.planCancelled?"përfundon":"rinovohet automatikisht"} më ${new Date(u.planExpiresAt).toLocaleDateString("sq-AL")}. ${u.planCancelled?"":"Mund ta anuloni kurdo — mbetet aktiv deri në skadim."}</p>`:""}
+    <p style="font-size:12px;color:var(--ink-faint)">Pagesa bëhet nga <a href="#/balance" style="color:var(--accent);font-weight:600">bilanci juaj</a> (PayPal, kriptomonedhë). Nëse bilanci nuk mjafton në rinovim, plani kthehet automatikisht në Falas — shpalljet ekzistuese nuk fshihen.</p>
+  </div></div>`;
+  $$("[data-plan]",v).forEach(b=>b.addEventListener("click",async()=>{
+    if(!u){authModal("login");return;}
+    const k=b.dataset.plan;
+    if(!confirm(`Të aktivizohet plani ${PLANS[k].name} për €${PLANS[k].price}/muaj nga bilanci juaj?`))return;
+    try{
+      if(Remote.enabled){
+        const j=await apiCall("/api/plan","POST",{plan:k}); Remote.user=j.user;
+      } else {
+        if(balanceOf(currentUser())<PLANS[k].price){toast(`Bilanci nuk mjafton (€${PLANS[k].price} nevojiten). Rimbusheni te Bilanci.`);return;}
+        localCredit(u.email,-PLANS[k].price,"subscription",`Plani ${PLANS[k].name} · 30 ditë`);
+        mutateLocalUser(x=>{x.plan=k;x.planExpiresAt=Date.now()+30*86400000;x.planCancelled=false;});
+      }
+      toast(`Plani ${PLANS[k].name} u aktivizua`); renderHeader(); viewPlans();
+    }catch(err){toast(err.message);}
+  }));
+  const pc=$("[data-plan-cancel]",v);
+  if(pc)pc.addEventListener("click",async()=>{
+    if(!u||cur==="free")return;
+    if(!confirm("Plani mbetet aktiv deri në skadim dhe pastaj kalon në Falas. Të vazhdohet?"))return;
+    try{
+      if(Remote.enabled){const j=await apiCall("/api/plan/cancel","POST",{});Remote.user=j.user;}
+      else mutateLocalUser(x=>{x.planCancelled=true;});
+      toast("Rinovimi u anulua"); viewPlans();
+    }catch(err){toast(err.message);}
+  });
+  attachFooter($(".myprops .inner",v));
+}
+
 /* ---------- balance & top-up ---------- */
 function viewBalance(){
   const u=currentUser(); const v=$("#view");
@@ -1554,18 +1633,24 @@ function viewMy(){
   destroyMap();
   if(!u){v.innerHTML=`<div class="myprops"><div class="inner"><p class="empty">Hyni për të parë shpalljet tuaja.</p></div></div>`;return;}
   const mine=(Remote.enabled?Remote.listings:Store.userListings()).filter(l=>l.owner===u.email).sort((a,b)=>b.createdAt-a.createdAt);
+  const plan=planOf(u);
   v.innerHTML=`<div class="myprops"><div class="inner">
     <h1 style="font-size:20px;margin:0 0 4px">Pronat e mia</h1>
-    <p style="font-size:13px;color:var(--ink-soft);margin:0 0 18px">${mine.length?`${mine.length} shpallje · keni hyrë si ${esc(u.email)}`:"Nuk keni shtuar ende asnjë pronë."}</p>
+    <p style="font-size:13px;color:var(--ink-soft);margin:0 0 6px">${mine.length?`${mine.length} shpallje · keni hyrë si ${esc(u.email)}`:"Nuk keni shtuar ende asnjë pronë."}</p>
+    <p style="font-size:12.5px;margin:0 0 18px">Plani: <b>${PLANS[plan].name}</b> · ${mine.filter(l=>l.status==="published").length}/${PLANS[plan].listings} shpallje aktive · <a href="#/plans" style="color:var(--accent);font-weight:600">${plan==="free"?"përmirëso planin":"menaxho planin"}</a></p>
     <div id="rows"></div>
     <button class="btn primary" data-go="#/add">+ Shto pronë</button>
   </div></div>`;
   const rows=$("#rows");
   mine.forEach(l=>{
+    const s=l.stats||{v:0,p:0,w:0};
     const row=document.createElement("div"); row.className="prop-row";
     row.innerHTML=`<img src="${l.photos[0]||svgThumb(3)}" alt="">
       <div class="info"><b>${esc(l.title)}</b>
-        <span>${CITIES[l.city].name} · ${DEALS[l.dealType]} · €${fmt(l.price)}${l.dealType==="rent"?"/muaj":l.dealType==="daily"?"/natë":""} ${l.status==="draft"?'· <span class="tag draft">DRAFT</span>':""} ${(l.promoBid||0)>0?`· <span class="tag promo">Promovuar €${l.promoBid}/ditë</span>`:""}</span></div>
+        <span>${CITIES[l.city].name} · ${DEALS[l.dealType]} · €${fmt(l.price)}${l.dealType==="rent"?"/muaj":l.dealType==="daily"?"/natë":""} ${l.status==="draft"?'· <span class="tag draft">DRAFT</span>':""} ${(l.promoBid||0)>0?`· <span class="tag promo">Promovuar €${l.promoBid}/ditë</span>`:""}</span>
+        <span class="lead-stats" title="Shikime · Telefonata të shfaqura · Klikime WhatsApp">👁 ${fmt(s.v||0)} · 📞 ${fmt(s.p||0)} · 💬 ${fmt(s.w||0)}
+          ${plan!=="free"?`<button class="stats-toggle" type="button" data-stats="${l.id}">statistika ↓</button>`:`<a href="#/plans" class="stats-teaser">statistika ditore me Pro →</a>`}</span>
+        <span class="stats-panel" id="stats-${esc(l.id)}" hidden></span></div>
       <div class="actions">
         ${l.status==="draft"?`<button class="btn" data-a="publish">Publiko</button>`:`<button class="btn" data-a="view">Shiko</button>`}
         <button class="btn" data-a="edit">Ndrysho</button>
@@ -1592,6 +1677,21 @@ function viewMy(){
         }
         viewMy(); toast("Shpallja u publikua");
       }catch(err){toast(err.message||"Nuk u publikua dot");}
+    });
+    const st=row.querySelector("[data-stats]");
+    if(st)st.addEventListener("click",()=>{
+      const panel=row.querySelector(".stats-panel");
+      if(!panel.hidden){panel.hidden=true;st.textContent="statistika ↓";return;}
+      const daily=l.statsDaily||{};
+      const days=[...Array(14)].map((_,i)=>{
+        const d=new Date(Date.now()-(13-i)*86400000).toISOString().slice(0,10);
+        return {d,...(daily[d]||{v:0,p:0,w:0})};
+      });
+      const max=Math.max(1,...days.map(x=>x.v));
+      panel.innerHTML=`<span class="stats-bars">${days.map(x=>
+        `<i title="${x.d}: ${x.v} shikime, ${x.p} tel, ${x.w} WA"><b style="height:${Math.round(x.v/max*34)+2}px"></b><u>${x.d.slice(8)}</u></i>`).join("")}</span>
+        <span class="stats-note">Shikime në 14 ditët e fundit · gjithsej: ${fmt((l.stats||{}).v||0)} shikime, ${fmt((l.stats||{}).p||0)} telefonata, ${fmt((l.stats||{}).w||0)} WhatsApp</span>`;
+      panel.hidden=false; st.textContent="statistika ↑";
     });
     rows.appendChild(row);
   });
@@ -1688,6 +1788,7 @@ function render(){
   else if(h.startsWith("#/searches")) viewSearches();
   else if(h.startsWith("#/admin")) viewAdmin();
   else if(h.startsWith("#/balance")) viewBalance();
+  else if(h.startsWith("#/plans")) viewPlans();
   else if(h.startsWith("#/terms")) viewStatic("terms");
   else if(h.startsWith("#/privacy")) viewStatic("privacy");
   else if(h.startsWith("#/about")) viewStatic("about");

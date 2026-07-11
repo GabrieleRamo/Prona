@@ -355,8 +355,13 @@ html[data-theme="dark"] .fav-btn.on{color:var(--accent);}
 .stats-bars u{text-decoration:none;font-size:8.5px;color:var(--ink-faint);}
 .stats-note{display:block;font-size:11px;color:var(--ink-faint);margin-top:6px;}
 .tag.premium{color:#fff;background:linear-gradient(120deg,#b8860b,#8a5a00);letter-spacing:.04em;}
+.tag.verified{color:#fff;background:linear-gradient(120deg,#2e7d5b,#1f5a40);letter-spacing:.04em;}
+.tag.pro{color:#fff;background:linear-gradient(120deg,#2d5fb8,#1e3f80);letter-spacing:.04em;}
 
 /* footer logo — larger brand presence */
 .foot-logo .mark{width:40px;height:40px;}
 .foot-logo b{font-size:30px;letter-spacing:-.03em;}
-.foot-brand{display:flex;align-items:center;}
+.foot-brand{display:flex;flex-direction:column;align-items:flex-start;}
+.foot-social{display:flex;gap:10px;margin-top:14px;}
+.foot-social a{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:var(--line-soft);color:var(--ink-soft);transition:background .15s,color .15s;}
+.foot-social a:hover{background:var(--accent);color:#fff;}

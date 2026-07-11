@@ -303,9 +303,9 @@ async function reverseGeocode(lng,lat){
 
 /* ================= subscription plans & lead tracking ================= */
 const PLANS={
-  free:{name:"Falas",listings:5,price:0,perks:["5 shpallje aktive","Publikim në hartë","Kontakt direkt me blerësit"]},
-  pro:{name:"Pro",listings:30,price:29,perks:["30 shpallje aktive","Statistika të detajuara","Prioritet në mbështetje"]},
-  premium:{name:"Premium",listings:"∞",price:79,perks:["Shpallje pa limit","Statistika të detajuara","Shenja «Premium» te shpalljet","Dukshmëri e zgjeruar e agjencisë"]},
+  free:{name:"Falas",listings:15,photos:15,price:0,perks:["15 prona aktive","15 foto për pronë","Verified Badge","Publikim në hartë","Kontakt direkt me blerësit"]},
+  pro:{name:"Pro",listings:40,photos:30,price:1400,perks:["40 prona aktive","30 foto për pronë","Pro Badge","Statistika të detajuara","Prioritet në mbështetje"]},
+  premium:{name:"Premium",listings:"∞",photos:Infinity,price:3900,perks:["Prona pa limit","Statistika të detajuara","Premium Badge","Dukshmëri e zgjeruar e agjencisë"]},
 };
 function planOf(u){
   if(!u)return "free";
@@ -466,6 +466,11 @@ function footerHTML(){
     <div class="foot-grid">
       <div class="foot-brand">
         <span class="logo foot-logo"><svg class="mark" viewBox="0 0 96 96" aria-hidden="true"><rect width="96" height="96" rx="22" fill="var(--accent)"/><path d="M26 52 L48 30 L70 52" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/><circle cx="48" cy="62" r="8" fill="#fff"/></svg><b>prona</b></span>
+        <div class="foot-social">
+          <a href="https://www.instagram.com/prona.albania/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg></a>
+          <a href="https://www.linkedin.com/company/prona-al/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="7.5" y1="10" x2="7.5" y2="17"/><circle cx="7.5" cy="6.7" r="0.9" fill="currentColor" stroke="none"/><path d="M11.5 17v-4.2c0-1.6 1-2.6 2.3-2.6s2.2 1 2.2 2.6V17"/></svg></a>
+          <a href="#" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M14 8.5h-1.5c-.8 0-1.5.7-1.5 1.5v2h3l-.4 3h-2.6v6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
       </div>
       <div class="foot-col"><b>Qytetet</b>
         ${["tirana","durres","vlore","shkoder","sarande"].map(k=>`<button type="button" data-foot-city="${k}">Prona në ${CITIES[k].name}</button>`).join("")}
@@ -850,7 +855,7 @@ async function viewListing(){
         <span class="card-info"><span class="price">${priceLabel(l)} ${l.dealType==="sale"&&l.totalArea?`<small>€${fmt(l.price/l.totalArea)}/m²</small>`:""}</span>
         <span class="name">${esc(l.title)}</span>
         <span class="dev">${esc(l.contactName)}</span>
-        <span class="tags">${(l.promoBid||0)>0?'<span class="tag promo">E promovuar</span>':""}${l.ownerPlan==="premium"?'<span class="tag premium">PREMIUM</span>':""}<span class="tag city">${CITIES[l.city].name}</span><span class="tag">${PTYPES[l.propertyType]}</span>
+        <span class="tags">${(l.promoBid||0)>0?'<span class="tag promo">E promovuar</span>':""}${l.ownerPlan==="premium"?'<span class="tag premium">PREMIUM</span>':l.ownerPlan==="pro"?'<span class="tag pro">PRO</span>':'<span class="tag verified">VERIFIED</span>'}<span class="tag city">${CITIES[l.city].name}</span><span class="tag">${PTYPES[l.propertyType]}</span>
         ${l.bedrooms?`<span class="tag">${l.bedrooms} dhoma</span>`:""}<span class="tag">${l.totalArea} m²</span></span></span>`;
       el.addEventListener("click",e=>{if(!e.target.closest(".fav-btn"))select(l,true);});
       el.addEventListener("keydown",e=>{if(e.key==="Enter")select(l,true);});
@@ -1247,6 +1252,7 @@ async function viewAdd(editId){
 
   /* --- photos --- */
   const grid=$("#photoGrid");
+  const photoLimit=PLANS[planOf(currentUser())].photos;
   const renderPhotos=()=>{
     grid.innerHTML=state.photos.map((p,i)=>`<div class="ph"><img src="${p}" alt="Photo ${i+1}">
       ${i===0?'<span class="main-badge">MAIN</span>':""}<button class="rm" data-i="${i}" type="button" aria-label="Hiq foton">×</button></div>`).join("");
@@ -1255,6 +1261,7 @@ async function viewAdd(editId){
   renderPhotos();
   const addFiles=files=>{
     [...files].filter(f=>f.type.startsWith("image/")).forEach(f=>{
+      if(state.photos.length>=photoLimit){toast(`Plani juaj lejon deri në ${photoLimit} foto për pronë. Kaloni në një plan më të lartë për më shumë.`);return;}
       const img=new Image();
       img.onload=()=>{
         const scale=Math.min(1,1280/img.width);
@@ -1488,7 +1495,7 @@ function viewPlans(){
       <div class="plan-card ${k==="pro"?"popular":""} ${cur===k?"current":""}">
         ${k==="pro"?'<span class="plan-flag">Më i zgjedhuri</span>':""}
         <h3>${p.name}</h3>
-        <div class="plan-price">${p.price?`€${p.price}<small>/muaj</small>`:"€0"}</div>
+        <div class="plan-price">${p.price?`${fmt(p.price)} L<small>/muaj</small>`:"0 L"}</div>
         <ul>${p.perks.map(x=>`<li>${x}</li>`).join("")}</ul>
         ${cur===k?`<button class="btn" disabled style="width:100%;justify-content:center">Plani aktual</button>`
           :k==="free"?`<button class="btn" data-plan-cancel style="width:100%;justify-content:center">${u&&u.planCancelled?"Anulohet në skadim":"Kalo në Falas"}</button>`
@@ -1501,12 +1508,12 @@ function viewPlans(){
   $$("[data-plan]",v).forEach(b=>b.addEventListener("click",async()=>{
     if(!u){authModal("login");return;}
     const k=b.dataset.plan;
-    if(!confirm(`Të aktivizohet plani ${PLANS[k].name} për €${PLANS[k].price}/muaj nga bilanci juaj?`))return;
+    if(!confirm(`Të aktivizohet plani ${PLANS[k].name} për ${fmt(PLANS[k].price)} L/muaj nga bilanci juaj?`))return;
     try{
       if(Remote.enabled){
         const j=await apiCall("/api/plan","POST",{plan:k}); Remote.user=j.user;
       } else {
-        if(balanceOf(currentUser())<PLANS[k].price){toast(`Bilanci nuk mjafton (€${PLANS[k].price} nevojiten). Rimbusheni te Bilanci.`);return;}
+        if(balanceOf(currentUser())<PLANS[k].price){toast(`Bilanci nuk mjafton (${fmt(PLANS[k].price)} L nevojiten). Rimbusheni te Bilanci.`);return;}
         localCredit(u.email,-PLANS[k].price,"subscription",`Plani ${PLANS[k].name} · 30 ditë`);
         mutateLocalUser(x=>{x.plan=k;x.planExpiresAt=Date.now()+30*86400000;x.planCancelled=false;});
       }

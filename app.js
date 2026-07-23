@@ -480,13 +480,13 @@ const I18N={
 "Pagesa bëhet nga":"Payment is made from","bilanci juaj":"your balance",
 "(PayPal, kriptomonedhë). Nëse bilanci nuk mjafton në rinovim, plani kthehet automatikisht në Falas — shpalljet ekzistuese nuk fshihen.":"(PayPal, cryptocurrency). If the balance isn't enough at renewal, the plan automatically switches to Free — existing listings aren't deleted.",
 "Rreth Nesh":"About Us",
-" është portali i pronave të paluajtshme për të gjithë Shqipërinë — nga Tirana dhe Durrësi deri në Vlorë, Shkodër e Sarandë.":" is the real-estate portal for all of Albania — from Tirana and Durrës to Vlorë, Shkodër and Sarandë.",
-"Misioni ynë është i thjeshtë: t'i bëjmë blerjen, shitjen dhe qiradhënien e pronave transparente dhe të lehta. Çdo shpallje shfaqet në hartë reale me vendndodhje të saktë, që blerësit të dinë gjithmonë se çfarë dhe ku po shohin.":"Our mission is simple: to make buying, selling, and renting properties transparent and easy. Every listing appears on a real map with an exact location, so buyers always know what and where they're looking at.",
+" është platforma digjitale e pronave të paluajtshme për të gjithë Shqipërinë — nga Tirana dhe Durrësi deri në Vlorë, Shkodër e Sarandë.":" is the digital real estate platform for all of Albania — from Tirana and Durrës to Vlorë, Shkodër and Sarandë.",
+"Misioni ynë është i thjeshtë: t'i bëjmë blerjen, shitjen dhe qiradhënien e pronave transparente dhe të lehta. Çdo shpallje shfaqet në hartë reale me vendndodhje të saktë — me pamje rrugësh dhe satelitore — që kushdo ta gjejë pronën lehtësisht, kudo në vend.":"Our mission is simple: to make buying, selling, and renting properties transparent and easy. Every listing appears on a real map with an exact location — with street and satellite views — so anyone can find the property easily, anywhere in the country.",
 "Çfarë ofrojmë":"What we offer","Për agjentët dhe agjencitë":"For agents and agencies","Dërgoni një mesazh":"Send a message",
 "Keni pyetje për një shpallje, llogarinë tuaj apo bashkëpunim? Na shkruani — përgjigjemi brenda një dite pune.":"Have a question about a listing, your account, or a partnership? Write to us — we reply within one business day.",
 "Email":"Email","Telefon":"Phone","Adresa":"Address","Orari":"Hours",
-"Hën–Pre, 09:00–18:00":"Mon–Fri, 09:00–18:00","Tiranë, Shqipëri":"Tirana, Albania",
-"Butoni hap programin tuaj të email-it me mesazhin të plotësuar — zëvendësoni adresën info@prona.al me email-in tuaj real para publikimit.":"The button opens your email app with the message filled in — replace info@prona.al with your real email before launch.",
+"Hën–Pre, 09:00–18:00":"Mon–Fri, 09:00–18:00","Vlorë, Shqipëri":"Vlorë, Albania",
+"Butoni hap programin tuaj të email-it me mesazhin të plotësuar.":"The button opens your email app with the message filled in.",
 "Llogaritë":"Accounts","Përgjegjësia":"Liability","Çfarë të dhënash mbledhim":"What data we collect","Si i përdorim":"How we use it","Pagesat":"Payments","Të drejtat tuaja":"Your rights",
 "Duke përdorur Prona, ju pranoni këto kushte. Ky tekst është një shabllon fillestar — para publikimit zyrtar, rishikojeni me një këshilltar ligjor.":"By using Prona, you accept these terms. This text is a starting template — before an official launch, review it with a legal advisor.",
 "Përdoruesit mund të publikojnë shpallje vetëm për prona që kanë të drejtë t'i reklamojnë. Shpalljet duhet të përmbajnë të dhëna të vërteta për çmimin, sipërfaqen dhe vendndodhjen.":"Users may only publish listings for properties they have the right to advertise. Listings must contain accurate data about price, area, and location.",
@@ -507,9 +507,29 @@ const I18N={
 "— me pamje rrugësh dhe satelitore, ndërtesa reale dhe numra shtëpish nga OpenStreetMap.":"— with street and satellite views, real buildings and house numbers from OpenStreetMap.",
 "— pronarët, agjentët dhe agjencitë publikojnë shpallje pa pagesë.":"— owners, agents and agencies publish listings for free.",
 "— kush dëshiron më shumë dukshmëri, vendos një ofertë ditore dhe renditet më lart në kategorinë e vet.":"— those who want more visibility set a daily bid and rank higher in their category.",
-"Krijoni një llogari si agjent ose agjenci dhe menaxhoni të gjitha shpalljet tuaja nga një vend i vetëm — me statistika bilanci dhe promovim fleksibël sipas buxhetit tuaj.":"Create an account as an agent or agency and manage all your listings from one place — with balance statistics and flexible promotion based on your budget.",
+"Krijoni një llogari si agjent ose agjenci dhe menaxhoni të gjitha shpalljet tuaja nga një vend i vetëm — me statistika bilanci, të dhëna për shikime dhe telefonata të shfaqura për çdo pronë, dhe promovim fleksibël sipas buxhetit tuaj.":"Create an account as an agent or agency and manage all your listings from one place — with balance statistics, view and phone-reveal data for every property, and flexible promotion based on your budget.",
+"Hartë reale të Shqipërisë":"Real map of Albania",
+"çdo shpallje shfaqet me vendndodhje të saktë, ndërtesa reale dhe numra shtëpish, me pamje rrugësh dhe satelitore.":"every listing appears with an exact location, real buildings and house numbers, with street and satellite views.",
+"Publikim falas":"Free publishing",
+"çdo pronar, agjent apo agjenci mund të publikojë shpallje pa pagesë, me deri në 15 prona aktive dhe 15 foto për pronë.":"any owner, agent, or agency can publish listings for free, with up to 15 active properties and 15 photos per property.",
+"Kontakt i drejtpërdrejtë":"Direct contact",
+"blerësit dhe qiramarrësit kontaktojnë direkt me pronarin ose agjentin, me telefon ose WhatsApp, pa ndërmjetës.":"buyers and tenants contact the owner or agent directly, by phone or WhatsApp, with no middleman.",
+"Kërkim i avancuar dhe kërkime të ruajtura":"Advanced search and saved searches",
+"filtroni sipas çmimit, sipërfaqes, dhomave dhe veçorive, ruani kërkimin dhe merrni njoftim kur shtohen prona që përputhen.":"filter by price, area, rooms and features, save your search, and get notified when matching properties are added.",
+"Favoritet":"Favorites",
+"ruani pronat që ju pëlqejnë me një klikim dhe rikthehuni te to kur të doni.":"save the properties you like with one click and come back to them anytime.",
+"Promovim me ofertë ditore":"Promotion with a daily bid",
+"kush dëshiron më shumë dukshmëri, vendos një ofertë ditore dhe renditet më lart në kategorinë e vet.":"those who want more visibility set a daily bid and rank higher in their category.",
+"Plane për agjenci dhe pronarë":"Plans for agencies and owners",
+"plani Pro dhe Premium hapin më shumë prona aktive, më shumë foto për pronë, statistika të detajuara për shikime dhe kontakte, si dhe shenja identifikuese (Verified, Pro, Premium) që rrisin besueshmërinë e shpalljes.":"the Pro and Premium plans unlock more active properties, more photos per property, detailed view and contact statistics, and identifying badges (Verified, Pro, Premium) that boost the listing's credibility.",
+"Pagesa fleksibël":"Flexible payments",
+"rimbushni bilancin me PayPal ose kriptomonedhë (BTC, ETH, USDT, SOL), mujore ose vjetore, pa kontrata afatgjata.":"top up your balance with PayPal or cryptocurrency (BTC, ETH, USDT, SOL), monthly or annually, with no long-term contracts.",
+"Besueshmëri dhe siguri":"Trust and security",
+"Llogaritë verifikohen me email, fjalëkalimet ruhen të enkriptuara, dhe çdo pagesë kalon nëpërmjet ofruesve të sigurt (PayPal, Coinbase Commerce). Prona është platformë ndërmjetësimi — ju këshillojmë gjithmonë të verifikoni pronën dhe dokumentacionin përpara çdo pagese.":"Accounts are verified by email, passwords are stored encrypted, and every payment goes through secure providers (PayPal, Coinbase Commerce). Prona is an intermediary platform — we always recommend verifying the property and documentation before any payment.",
 "Lozhë":"Loggia","Dupleks":"Duplex","Dritare panoramike":"Panoramic windows","Dy banjo":"Two bathrooms","PEZULLUAR":"SUSPENDED",
 "Pronar privat":"Private owner","Agjent imobiliar":"Real estate agent",
+"Platforma digjitale e pronave në Shqipëri":"The digital real estate platform in Albania",
+"Listo ose gjej pronën tënde":"List or find your property",
 "Apartament 2+1 në Rrugën e Kavajës":"2+1 apartment on Rruga e Kavajës","Apartament familjar 3+1 në Bllok":"Family 3+1 apartment in Bllok",
 "Garsoniere pranë liqenit të Parkut të Madh":"Studio near the Big Park lake","Apartament 1+1 i mobiluar, Pazari i Ri":"Furnished 1+1 apartment, Pazari i Ri",
 "Shtëpi me kopsht, Kodra e Diellit":"House with garden, Kodra e Diellit","2+1 me tarracë, Komuna e Parisit":"2+1 with terrace, Komuna e Parisit",
@@ -785,6 +805,10 @@ async function viewListing(){
   const online=await checkTiles();
   const v=$("#view");
   v.innerHTML=`
+    <div class="hero-quote">
+      <h1>Platforma digjitale e pronave në Shqipëri</h1>
+      <p>Listo ose gjej pronën tënde</p>
+    </div>
     <div class="filters">
       <div class="seg" id="dealSeg" role="group" aria-label="Lloji i marrëveshjes">
         ${Object.entries(DEALS).map(([k,l])=>`<button data-v="${k}" ${k===ROUTE_DEAL?'class="on"':""} type="button">${k==="sale"?"Blej":k==="rent"?"Qira":"Ditore"}</button>`).join("")}
@@ -1822,17 +1846,23 @@ function viewStatic(kind){
   if(kind==="about"){
     v.innerHTML=`<div class="static-page"><div class="inner">
       <h1>Rreth Nesh</h1>
-      <p><b>Prona</b> është portali i pronave të paluajtshme për të gjithë Shqipërinë — nga Tirana dhe Durrësi deri në Vlorë, Shkodër e Sarandë.</p>
-      <p>Misioni ynë është i thjeshtë: t'i bëjmë blerjen, shitjen dhe qiradhënien e pronave transparente dhe të lehta. Çdo shpallje shfaqet në hartë reale me vendndodhje të saktë, që blerësit të dinë gjithmonë se çfarë dhe ku po shohin.</p>
+      <p><b>Prona</b> është platforma digjitale e pronave të paluajtshme për të gjithë Shqipërinë — nga Tirana dhe Durrësi deri në Vlorë, Shkodër e Sarandë.</p>
+      <p>Misioni ynë është i thjeshtë: t'i bëjmë blerjen, shitjen dhe qiradhënien e pronave transparente dhe të lehta. Çdo shpallje shfaqet në hartë reale me vendndodhje të saktë — me pamje rrugësh dhe satelitore — që kushdo ta gjejë pronën lehtësisht, kudo në vend.</p>
       <h2>Çfarë ofrojmë</h2>
       <ul>
-        <li><b>Hartë reale të Shqipërisë</b> — me pamje rrugësh dhe satelitore, ndërtesa reale dhe numra shtëpish nga OpenStreetMap.</li>
-        <li><b>Publikim falas</b> — pronarët, agjentët dhe agjencitë publikojnë shpallje pa pagesë.</li>
+        <li><b>Hartë reale të Shqipërisë</b> — çdo shpallje shfaqet me vendndodhje të saktë, ndërtesa reale dhe numra shtëpish, me pamje rrugësh dhe satelitore.</li>
+        <li><b>Publikim falas</b> — çdo pronar, agjent apo agjenci mund të publikojë shpallje pa pagesë, me deri në 15 prona aktive dhe 15 foto për pronë.</li>
+        <li><b>Kontakt i drejtpërdrejtë</b> — blerësit dhe qiramarrësit kontaktojnë direkt me pronarin ose agjentin, me telefon ose WhatsApp, pa ndërmjetës.</li>
+        <li><b>Kërkim i avancuar dhe kërkime të ruajtura</b> — filtroni sipas çmimit, sipërfaqes, dhomave dhe veçorive, ruani kërkimin dhe merrni njoftim kur shtohen prona që përputhen.</li>
+        <li><b>Favoritet</b> — ruani pronat që ju pëlqejnë me një klikim dhe rikthehuni te to kur të doni.</li>
         <li><b>Promovim me ofertë ditore</b> — kush dëshiron më shumë dukshmëri, vendos një ofertë ditore dhe renditet më lart në kategorinë e vet.</li>
-        <li><b>Kontakt i drejtpërdrejtë</b> — blerësit kontaktojnë direkt me pronarin ose agjentin, me telefon ose WhatsApp.</li>
+        <li><b>Plane për agjenci dhe pronarë</b> — plani Pro dhe Premium hapin më shumë prona aktive, më shumë foto për pronë, statistika të detajuara për shikime dhe kontakte, si dhe shenja identifikuese (Verified, Pro, Premium) që rrisin besueshmërinë e shpalljes.</li>
+        <li><b>Pagesa fleksibël</b> — rimbushni bilancin me PayPal ose kriptomonedhë (BTC, ETH, USDT, SOL), mujore ose vjetore, pa kontrata afatgjata.</li>
       </ul>
       <h2>Për agjentët dhe agjencitë</h2>
-      <p>Krijoni një llogari si agjent ose agjenci dhe menaxhoni të gjitha shpalljet tuaja nga një vend i vetëm — me statistika bilanci dhe promovim fleksibël sipas buxhetit tuaj.</p>
+      <p>Krijoni një llogari si agjent ose agjenci dhe menaxhoni të gjitha shpalljet tuaja nga një vend i vetëm — me statistika bilanci, të dhëna për shikime dhe telefonata të shfaqura për çdo pronë, dhe promovim fleksibël sipas buxhetit tuaj.</p>
+      <h2>Besueshmëri dhe siguri</h2>
+      <p>Llogaritë verifikohen me email, fjalëkalimet ruhen të enkriptuara, dhe çdo pagesë kalon nëpërmjet ofruesve të sigurt (PayPal, Coinbase Commerce). Prona është platformë ndërmjetësimi — ju këshillojmë gjithmonë të verifikoni pronën dhe dokumentacionin përpara çdo pagese.</p>
     </div></div>`;
     attachFooter($(".static-page .inner",v));
     return;
@@ -1843,9 +1873,9 @@ function viewStatic(kind){
       <p>Keni pyetje për një shpallje, llogarinë tuaj apo bashkëpunim? Na shkruani — përgjigjemi brenda një dite pune.</p>
       <div class="panel-box" style="margin:16px 0">
         <div class="spec-list">
-          <div><span>Email</span><b><a href="mailto:info@prona.al" style="color:var(--accent)">info@prona.al</a></b></div>
-          <div><span>Telefon</span><b>+355 4 000 0000</b></div>
-          <div><span>Adresa</span><b>Tiranë, Shqipëri</b></div>
+          <div><span>Email</span><b><a href="mailto:prona.al@proton.me" style="color:var(--accent)">prona.al@proton.me</a></b></div>
+          <div><span>Telefon</span><b>+355 69 369 4421</b></div>
+          <div><span>Adresa</span><b>Vlorë, Shqipëri</b></div>
           <div><span>Orari</span><b>Hën–Pre, 09:00–18:00</b></div>
         </div>
       </div>
@@ -1856,12 +1886,12 @@ function viewStatic(kind){
         </div>
         <div class="frow"><label for="c-msg">Mesazhi</label><textarea id="c-msg" rows="5" placeholder="Shkruani mesazhin tuaj këtu…"></textarea></div>
         <button class="btn primary" id="c-send" type="button">Dërgo mesazhin</button>
-        <p class="form-note">Butoni hap programin tuaj të email-it me mesazhin të plotësuar — zëvendësoni adresën info@prona.al me email-in tuaj real para publikimit.</p>
+        <p class="form-note">Butoni hap programin tuaj të email-it me mesazhin të plotësuar.</p>
       </div>
     </div></div>`;
     $("#c-send").addEventListener("click",()=>{
       const body=encodeURIComponent(($("#c-msg").value||"")+"\n\n— "+($("#c-name").value||"")+" ("+($("#c-email").value||"")+")");
-      location.href="mailto:info@prona.al?subject="+encodeURIComponent("Mesazh nga faqja Prona")+"&body="+body;
+      location.href="mailto:prona.al@proton.me?subject="+encodeURIComponent("Mesazh nga faqja Prona")+"&body="+body;
     });
     attachFooter($(".static-page .inner",v));
     return;

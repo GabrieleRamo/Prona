@@ -303,9 +303,9 @@ async function reverseGeocode(lng,lat){
 
 /* ================= subscription plans & lead tracking ================= */
 const PLANS={
-  free:{name:"Falas",listings:15,photos:15,price:0,perks:["15 prona aktive","15 foto për pronë","Verified Badge","Publikim në hartë","Kontakt direkt me blerësit"]},
-  pro:{name:"Pro",listings:40,photos:30,price:1400,perks:["40 prona aktive","30 foto për pronë","Pro Badge","Statistika të detajuara","Prioritet në mbështetje"]},
-  premium:{name:"Premium",listings:"∞",photos:Infinity,price:3900,perks:["Prona pa limit","Statistika të detajuara","Premium Badge","Dukshmëri e zgjeruar e agjencisë"]},
+  free:{name:"Falas",listings:15,photos:15,price:0,priceAnnual:0,perks:["15 prona aktive","15 foto për pronë","Verified Badge","Publikim në hartë","Kontakt direkt me blerësit"]},
+  pro:{name:"Pro",listings:40,photos:30,price:1400,priceAnnual:12600,perks:["40 prona aktive","30 foto për pronë","Pro Badge","Statistika të detajuara","Prioritet në mbështetje"]},
+  premium:{name:"Premium",listings:"∞",photos:Infinity,price:3900,priceAnnual:29000,perks:["Prona pa limit","Statistika të detajuara","Premium Badge","Dukshmëri e zgjeruar e agjencisë"]},
 };
 function planOf(u){
   if(!u)return "free";
@@ -386,6 +386,7 @@ const totalNewMatches=()=>getSearches().reduce((n,s)=>n+searchNewCount(s),0);
 
 /* ================= language (SQ default, EN overlay) ================= */
 let LANG=Store.read("prona_lang","sq");
+function T(sq,en){ return LANG==="en"?en:sq; }
 const I18N={
 "Blej":"Buy","Qira":"Rent","Ditore":"Daily","Rreth Nesh":"About Us","Na Kontaktoni":"Contact Us",
 "+ Shto pronë":"+ Add property","Hyr":"Log in","Dil":"Log out","Admin":"Admin",
@@ -427,6 +428,101 @@ const I18N={
 "Veçoritë e planimetrisë":"Layout features","Përshkrimi":"Description","Kompleks banimi":"Residential complex",
 "Kate në ndërtesë":"Floors in building","Sipërfaqja totale, m²":"Total area, m²","Sipërfaqja e banimit, m²":"Living area, m²","Sipërfaqja e tarracës, m²":"Terrace area, m²",
 "Lidhje YouTube":"YouTube link","Ky numër është në WhatsApp":"This number is on WhatsApp",
+"Falas":"Free","Kuzhinë e hapur":"Open kitchen","Dhomë veshjeje":"Dressing room","Kërkesa dështoi":"Request failed",
+"Harta bazë":"Base map","Mënyra e pamjes":"View mode",
+"15 foto për pronë":"15 photos per property","Publikim në hartë":"Map publishing","Kontakt direkt me blerësit":"Direct contact with buyers",
+"30 foto për pronë":"30 photos per property","Statistika të detajuara":"Detailed statistics","Prioritet në mbështetje":"Priority support",
+"Dukshmëri e zgjeruar e agjencisë":"Extended agency visibility","Prona pa limit":"Unlimited properties",
+"15 prona aktive":"15 active properties","40 prona aktive":"40 active properties","Verified Badge":"Verified Badge","Pro Badge":"Pro Badge","Premium Badge":"Premium Badge",
+"Ndrysho temën":"Change theme","Dolët nga llogaria":"You have been logged out",
+"Mirë se u ktheve — hyni për të menaxhuar shpalljet tuaja.":"Welcome back — log in to manage your listings.",
+"Pronarët, agjentët dhe agjencitë mund të publikojnë prona në Prona.":"Owners, agents and agencies can list properties on Prona.",
+"Rivendosja e fjalëkalimit punon kur faqja hostohet me serverin e saj":"Password reset works once the site is hosted with its server",
+"Mirë se u ktheve, ":"Welcome back, ",
+"Email ose fjalëkalim i gabuar.":"Wrong email or password.",
+"Ky email është i regjistruar — provoni të hyni.":"This email is already registered — try logging in.",
+"Ju dërguam një kod 6-shifror në email. Shkruajeni më poshtë.":"We sent a 6-digit code to your email. Enter it below.",
+"Kodi u ridërgua në email":"Code resent to your email",
+"Kontrolloni email-in për kodin, pastaj vendosni fjalëkalimin e ri.":"Check your email for the code, then set your new password.",
+"Fjalëkalimi u ndryshua — hyni me të riun":"Password changed — log in with the new one",
+"Kërko: lagje, rrugë, kompleks…":"Search: neighborhood, street, complex…","Kërko prona":"Search properties",
+"Veçoritë":"Features","/natë":"/night","/muaj":"/month","/vit":"/year",
+"Emri i kërkimit:":"Search name:",
+"Kërkimi u ruajt — do të shihni njoftim kur të shtohen prona që përputhen":"Search saved — you'll get a notification when matching properties are added",
+"Pronar i pronës":"Property owner","E mëparshme":"Previous",
+"Shkruani rrugën ose vendin, p.sh. Rruga Myslym Shyri 12":"Enter the street or place, e.g. Rruga Myslym Shyri 12",
+"Kërkon në bazën e adresave OpenStreetMap për Shqipërinë.":"Searches the OpenStreetMap address database for Albania.",
+"Kërkimi i adresave punon me shërbimin e hartës kur faqja hostohet — në këtë pamje paraprake gjen vetëm emrat e qyteteve.":"Address search works with the map service once the site is hosted — this preview only finds city names.",
+"Çfarë e bën këtë pronë një ofertë të mirë? Shkruani në çdo gjuhë.":"What makes this property a good deal? Write in any language.",
+"Çmimi ditor i promovimit në euro":"Daily promotion price in Lek","Çmimi i qirasë":"Rental price",
+"Shpalljet me të paktën 3 foto shikohen shumë më tepër. Të publikohet gjithsesi?":"Listings with at least 3 photos get viewed much more. Publish anyway?",
+"Shpallja u përditësua":"Listing updated","Nuk u ruajt — provoni përsëri":"Couldn't save — try again",
+"Asgjë për të ruajtur ende":"Nothing to save yet","Të pastrohet i gjithë formulari?":"Clear the whole form?",
+"Klikoni ♥ te një shpallje për ta ruajtur këtu.":"Click ♥ on a listing to save it here.",
+"Njoftoheni kur shtohen prona të reja që përputhen me kërkimin tuaj.":"Get notified when new properties matching your search are added.",
+"Hapni kërkimin e avancuar dhe klikoni \"Ruaj kërkimin\".":"Open advanced search and click \"Save search\".",
+"Ta fshini këtë kërkim?":"Delete this search?","Ende asnjë shpallje nga përdoruesit.":"No user listings yet.",
+"Ta fshini këtë shpallje si administrator?":"Delete this listing as administrator?",
+"U përditësua":"Updated","Më i zgjedhuri":"Most popular","Anulohet në skadim":"Cancels at expiry","Kalo në Falas":"Switch to Free",
+"përfundon":"ends","Mund ta anuloni kurdo — mbetet aktiv deri në skadim.":"You can cancel anytime — it stays active until it expires.",
+"Plani mbetet aktiv deri në skadim dhe pastaj kalon në Falas. Të vazhdohet?":"The plan stays active until it expires and then switches to Free. Continue?",
+"Shuma e rimbushjes në euro":"Top-up amount in Lek","Kontrollo pagesën":"Check payment",
+"PayPal nuk mundi ta përfundojë pagesën — provoni përsëri.":"PayPal couldn't complete the payment — try again.",
+"Arka e Coinbase Commerce u hap në një dritare të re. Pasi të paguani, klikoni \"Kontrollo pagesën\".":"The Coinbase Commerce checkout opened in a new window. After paying, click \"Check payment\".",
+"Rimbushje demo (pa pagesë reale)":"Demo top-up (no real payment)","Nuk keni shtuar ende asnjë pronë.":"You haven't added any property yet.",
+"përmirëso planin":"upgrade plan","menaxho planin":"manage plan",
+"Shikime · Telefonata të shfaqura · Klikime WhatsApp":"Views · Phone reveals · WhatsApp clicks",
+"Ta fshini këtë shpallje përgjithmonë?":"Delete this listing permanently?","Shkruani mesazhin tuaj këtu…":"Write your message here…",
+"statistika ditore me Pro →":"daily stats with Pro →","Hyni për të parë shpalljet tuaja.":"Log in to see your listings.",
+"Planet për agjenci dhe pronarë":"Plans for agencies and owners",
+"Publikimi bazë është gjithmonë falas. Planet me pagesë hapin më shumë shpallje aktive dhe statistika — paguhen nga bilanci juaj, pa kontrata.":"Basic publishing is always free. Paid plans unlock more active listings and statistics — charged from your balance, no contracts.",
+"Mujor":"Monthly","Vjetor":"Annual","Plani aktual":"Current plan",
+"Pagesa bëhet nga":"Payment is made from","bilanci juaj":"your balance",
+"(PayPal, kriptomonedhë). Nëse bilanci nuk mjafton në rinovim, plani kthehet automatikisht në Falas — shpalljet ekzistuese nuk fshihen.":"(PayPal, cryptocurrency). If the balance isn't enough at renewal, the plan automatically switches to Free — existing listings aren't deleted.",
+"Rreth Nesh":"About Us",
+" është portali i pronave të paluajtshme për të gjithë Shqipërinë — nga Tirana dhe Durrësi deri në Vlorë, Shkodër e Sarandë.":" is the real-estate portal for all of Albania — from Tirana and Durrës to Vlorë, Shkodër and Sarandë.",
+"Misioni ynë është i thjeshtë: t'i bëjmë blerjen, shitjen dhe qiradhënien e pronave transparente dhe të lehta. Çdo shpallje shfaqet në hartë reale me vendndodhje të saktë, që blerësit të dinë gjithmonë se çfarë dhe ku po shohin.":"Our mission is simple: to make buying, selling, and renting properties transparent and easy. Every listing appears on a real map with an exact location, so buyers always know what and where they're looking at.",
+"Çfarë ofrojmë":"What we offer","Për agjentët dhe agjencitë":"For agents and agencies","Dërgoni një mesazh":"Send a message",
+"Keni pyetje për një shpallje, llogarinë tuaj apo bashkëpunim? Na shkruani — përgjigjemi brenda një dite pune.":"Have a question about a listing, your account, or a partnership? Write to us — we reply within one business day.",
+"Email":"Email","Telefon":"Phone","Adresa":"Address","Orari":"Hours",
+"Hën–Pre, 09:00–18:00":"Mon–Fri, 09:00–18:00","Tiranë, Shqipëri":"Tirana, Albania",
+"Butoni hap programin tuaj të email-it me mesazhin të plotësuar — zëvendësoni adresën info@prona.al me email-in tuaj real para publikimit.":"The button opens your email app with the message filled in — replace info@prona.al with your real email before launch.",
+"Llogaritë":"Accounts","Përgjegjësia":"Liability","Çfarë të dhënash mbledhim":"What data we collect","Si i përdorim":"How we use it","Pagesat":"Payments","Të drejtat tuaja":"Your rights",
+"Duke përdorur Prona, ju pranoni këto kushte. Ky tekst është një shabllon fillestar — para publikimit zyrtar, rishikojeni me një këshilltar ligjor.":"By using Prona, you accept these terms. This text is a starting template — before an official launch, review it with a legal advisor.",
+"Përdoruesit mund të publikojnë shpallje vetëm për prona që kanë të drejtë t'i reklamojnë. Shpalljet duhet të përmbajnë të dhëna të vërteta për çmimin, sipërfaqen dhe vendndodhjen.":"Users may only publish listings for properties they have the right to advertise. Listings must contain accurate data about price, area, and location.",
+"Ju përgjigjeni për ruajtjen e fjalëkalimit tuaj dhe për veprimtarinë në llogarinë tuaj. Prona mund të pezullojë llogari që shkelin këto kushte.":"You are responsible for keeping your password safe and for activity on your account. Prona may suspend accounts that violate these terms.",
+"Promovimi i shpalljeve tarifohet nga bilanci juaj sipas ofertës ditore që keni zgjedhur. Tarifimi ndalon automatikisht kur bilanci mbaron. Rimbushjet përpunohen nga PayPal.":"Listing promotion is charged from your balance according to the daily bid you chose. Charging stops automatically when the balance runs out. Top-ups are processed by PayPal.",
+"Prona është platformë ndërmjetësimi dhe nuk është palë në transaksionet mes blerësve dhe shitësve. Verifikoni gjithmonë pronën dhe dokumentacionin para çdo pagese.":"Prona is an intermediary platform and is not a party to transactions between buyers and sellers. Always verify the property and documentation before any payment.",
+"Ky tekst është një shabllon fillestar — para publikimit zyrtar, rishikojeni me një këshilltar ligjor dhe përshtateni me legjislacionin shqiptar për mbrojtjen e të dhënave.":"This text is a starting template — before an official launch, review it with a legal advisor and adapt it to Albanian data-protection law.",
+"Emrin, adresën e email-it dhe numrin e telefonit që jepni kur krijoni llogari ose publikoni shpallje, si dhe të dhënat e shpalljeve tuaja (adresa, fotot, çmimi).":"The name, email address and phone number you provide when creating an account or publishing a listing, as well as your listing data (address, photos, price).",
+"Për të shfaqur shpalljet tuaja, për t'ju mundësuar hyrjen në llogari dhe për të përpunuar rimbushjet e bilancit. Nuk i shesim të dhënat tuaja palëve të treta.":"To display your listings, to let you log in to your account, and to process balance top-ups. We do not sell your data to third parties.",
+"Pagesat përpunohen nga PayPal; ne nuk ruajmë të dhëna kartash. Shërbimet e hartës (OpenStreetMap, Esri) marrin kërkesat e nevojshme teknike për të shfaqur hartën.":"Payments are processed by PayPal; we do not store card data. Map services (OpenStreetMap, Esri) receive the technical requests needed to display the map.",
+"Mund të kërkoni në çdo kohë fshirjen e llogarisë dhe të të dhënave tuaja duke na kontaktuar.":"You may request deletion of your account and your data at any time by contacting us.",
+"Vendosni vendndodhjen në hartë që blerësit ta gjejnë pronën.":"Set the location on the map so buyers can find the property.",
+"Si duhet t'ju drejtohen blerësit?":"How should buyers address you?",
+"Pa komision për blerësin":"No commission for the buyer","Pa komision për qiramarrësin":"No commission for the tenant",
+"Pa komision nga blerësi":"No commission from the buyer","Pa komision nga qiramarrësi":"No commission from the tenant",
+"Kontakt i drejtpërdrejtë":"Direct contact","Hartë reale të Shqipërisë":"Real map of Albania","Publikim falas":"Free publishing","Promovim me ofertë ditore":"Promotion with a daily bid",
+"— blerësit kontaktojnë direkt me pronarin ose agjentin, me telefon ose WhatsApp.":"— buyers contact the owner or agent directly, by phone or WhatsApp.",
+"— me pamje rrugësh dhe satelitore, ndërtesa reale dhe numra shtëpish nga OpenStreetMap.":"— with street and satellite views, real buildings and house numbers from OpenStreetMap.",
+"— pronarët, agjentët dhe agjencitë publikojnë shpallje pa pagesë.":"— owners, agents and agencies publish listings for free.",
+"— kush dëshiron më shumë dukshmëri, vendos një ofertë ditore dhe renditet më lart në kategorinë e vet.":"— those who want more visibility set a daily bid and rank higher in their category.",
+"Krijoni një llogari si agjent ose agjenci dhe menaxhoni të gjitha shpalljet tuaja nga një vend i vetëm — me statistika bilanci dhe promovim fleksibël sipas buxhetit tuaj.":"Create an account as an agent or agency and manage all your listings from one place — with balance statistics and flexible promotion based on your budget.",
+"Lozhë":"Loggia","Dupleks":"Duplex","Dritare panoramike":"Panoramic windows","Dy banjo":"Two bathrooms","PEZULLUAR":"SUSPENDED",
+"Pronar privat":"Private owner","Agjent imobiliar":"Real estate agent",
+"Apartament 2+1 në Rrugën e Kavajës":"2+1 apartment on Rruga e Kavajës","Apartament familjar 3+1 në Bllok":"Family 3+1 apartment in Bllok",
+"Garsoniere pranë liqenit të Parkut të Madh":"Studio near the Big Park lake","Apartament 1+1 i mobiluar, Pazari i Ri":"Furnished 1+1 apartment, Pazari i Ri",
+"Shtëpi me kopsht, Kodra e Diellit":"House with garden, Kodra e Diellit","2+1 me tarracë, Komuna e Parisit":"2+1 with terrace, Komuna e Parisit",
+"Njësi tregtare në rrugë, Don Bosko":"Commercial unit on the street, Don Bosko","Garsoniere pranë Sheshit Skënderbej":"Studio near Skanderbeg Square",
+"Apartament 2+1 buzë detit me ballkon":"2+1 apartment by the sea with balcony","1+1 pranë plazhit të Currilave":"1+1 near Currila Beach",
+"2+1 me qira afatgjatë, zona e portit":"2+1 for long-term rent, port area","Apartament plazhi, për 4 persona":"Beach apartment, for 4 people",
+"2+1 në Lungomare, pamje nga deti":"2+1 on the Lungomare, sea view","3+1 sipër Kuzum Babait":"3+1 above Kuzum Babai",
+"Garsoniere te Marina, për pushime":"Studio at the Marina, for vacation","Shtëpi e vogël me oborr, Plazhi i Vjetër":"Small house with yard, Old Beach",
+"2+1 pranë pedonales":"2+1 near the pedestrian street","Shtëpi tradicionale guri për rikonstruksion":"Traditional stone house for renovation",
+"1+1 te bulevardi Rozafa":"1+1 on Rozafa Boulevard","2+1 me pamje nga Joni":"2+1 with a view of the Ionian",
+"Truall ndërtimi mbi gji, 480 m²":"Building plot over the bay, 480 m²","Apartament në shëtitore, 50 m nga deti":"Apartment on the promenade, 50 m from the sea",
+"Banesë e ndritshme dhe funksionale në një nga lagjet më të mira të qytetit ":"A bright and functional home in one of the city's best neighborhoods, ",
+". Pranë shkollave, kafeneve dhe transportit publik.":". Close to schools, cafés, and public transport.",
 };
 function translateDOM(root){
   if(LANG!=="en"||!root)return;
@@ -547,7 +643,7 @@ function renderHeader(){
   const lo=$("#logoutBtn"); if(lo) lo.addEventListener("click",async()=>{
     if(Remote.enabled){try{await apiCall("/api/logout","POST",{});}catch(e){} Remote.user=null; Remote.listings=Remote.listings.filter(l=>l.status==="published");}
     else Store.setSession(null);
-    toast("Dolët nga llogaria");renderHeader();render();
+    toast(T("Dolët nga llogaria","You have been logged out"));renderHeader();render();
   });
 }
 function toast(msg){
@@ -580,7 +676,7 @@ function authModal(mode){
   $(".close-x",root).addEventListener("click",close);
   $(".modal-back",root).addEventListener("click",e=>{if(e.target.classList.contains("modal-back"))close();});
   $("#swapAuth",root).addEventListener("click",()=>authModal(isLogin?"register":"login"));
-  const fp=$("#forgotPw",root); if(fp)fp.addEventListener("click",()=>{ if(Remote.enabled)resetModal(); else toast("Rivendosja e fjalëkalimit punon kur faqja hostohet me serverin e saj"); });
+  const fp=$("#forgotPw",root); if(fp)fp.addEventListener("click",()=>{ if(Remote.enabled)resetModal(); else toast(T("Rivendosja e fjalëkalimit punon kur faqja hostohet me serverin e saj","Password reset works once the site is hosted with its server")); });
   let accType="owner";
   const tp=$("#a-type",root);
   if(tp)$$(".choice",tp).forEach(c=>c.addEventListener("click",()=>{$$(".choice",tp).forEach(x=>x.classList.remove("on"));c.classList.add("on");accType=c.dataset.v;}));
@@ -606,13 +702,13 @@ function authModal(mode){
     if(isLogin){
       const u=users.find(x=>x.email===email&&x.pass===pass);
       if(!u){errEl.textContent="Email ose fjalëkalim i gabuar.";errEl.parentElement.classList.add("invalid");return;}
-      Store.setSession({email}); close(); toast("Mirë se u ktheve, "+u.name.split(" ")[0]); renderHeader(); render();
+      Store.setSession({email}); close(); toast(T("Mirë se u ktheve, ","Welcome back, ")+u.name.split(" ")[0]); renderHeader(); render();
     } else {
       if(users.some(x=>x.email===email)){errEl.textContent="Ky email është i regjistruar — provoni të hyni.";errEl.parentElement.classList.add("invalid");return;}
       const name=$("#a-name",root).value.trim()||"User";
       users.push({name,email,pass,type:accType,createdAt:Date.now()});
       Store.saveUsers(users); Store.setSession({email});
-      close(); toast("Llogaria u krijua"); renderHeader(); render();
+      close(); toast(T("Llogaria u krijua","Account created")); renderHeader(); render();
     }
   });
 }
@@ -635,7 +731,7 @@ function verifyModal(devCode){
   $("#vResend",root).addEventListener("click",async()=>{
     try{const j=await apiCall("/api/verify","POST",{resend:true});
       if(j.devCode)$(".lede",root).innerHTML=`Modalitet demo: kodi juaj është <b style="font-size:16px">${esc(j.devCode)}</b>`;
-      else toast("Kodi u ridërgua në email");
+      else toast(T("Kodi u ridërgua në email","Code resent to your email"));
     }catch(err){toast(err.message);}
   });
   $("#vForm",root).addEventListener("submit",async e=>{
@@ -643,7 +739,7 @@ function verifyModal(devCode){
     const errEl=$("#v-err",root); errEl.parentElement.classList.remove("invalid");
     try{
       const j=await apiCall("/api/verify","POST",{code:$("#v-code",root).value.trim()});
-      Remote.user=j.user; close(); toast("Email-i u verifikua"); renderHeader();
+      Remote.user=j.user; close(); toast(T("Email-i u verifikua","Email verified")); renderHeader();
     }catch(err){errEl.textContent=err.message;errEl.parentElement.classList.add("invalid");}
   });
 }
@@ -674,7 +770,7 @@ function resetModal(){
         $("#r-lede",root).innerHTML=j.devCode?`Modalitet demo: kodi juaj është <b style="font-size:16px">${esc(j.devCode)}</b>`:"Kontrolloni email-in për kodin, pastaj vendosni fjalëkalimin e ri.";
       } else {
         await apiCall("/api/reset/confirm","POST",{email,code:$("#r-code",root).value.trim(),password:$("#r-pass",root).value});
-        close(); toast("Fjalëkalimi u ndryshua — hyni me të riun"); authModal("login");
+        close(); toast(T("Fjalëkalimi u ndryshua — hyni me të riun","Password changed — log in with the new one")); authModal("login");
       }
     }catch(err){ if(errEl){errEl.textContent=err.message;errEl.parentElement.classList.add("invalid");} else toast(err.message); }
   });
@@ -793,7 +889,7 @@ async function viewListing(){
         const lng=list.reduce((s,l)=>s+l.lng,0)/list.length, lat=list.reduce((s,l)=>s+l.lat,0)/list.length;
         const el=document.createElement("button"); el.className="cluster-pin"; el.type="button";
         el.textContent=list.length;
-        el.setAttribute("aria-label",list.length+" shpallje këtu — kliko për të zmadhuar");
+        el.setAttribute("aria-label",T(list.length+" shpallje këtu — kliko për të zmadhuar",list.length+" listings here — click to zoom in"));
         el.addEventListener("click",()=>map.flyTo({center:[lng,lat],zoom:Math.min(z+1.8,14.5),duration:700}));
         clusterMarkers.push(new maplibregl.Marker({element:el}).setLngLat([lng,lat]).addTo(map));
       }
@@ -843,7 +939,7 @@ async function viewListing(){
   function renderCards(){
     const vis=visible(), cardsEl=$("#cards");
     $("#countNote").textContent=`${vis.length} shpallje`;
-    $("#listTitle").textContent=`${DEALS[deal]}${ptype?" · "+PTYPES[ptype]:""} ${city?"në "+CITIES[city].name:"në Shqipëri"}`;
+    $("#listTitle").textContent=`${DEALS[deal]}${ptype?" · "+PTYPES[ptype]:""} ${city?T("në ","in ")+CITIES[city].name:T("në Shqipëri","in Albania")}`;
     $("#listSub").textContent=vis.length?`nga €${fmt(Math.min(...vis.map(l=>l.price)))}${deal==="rent"?"/muaj":deal==="daily"?"/natë":""}`:"";
     cardsEl.innerHTML=vis.length?"":`<p class="empty">Asnjë pronë nuk përputhet me këto filtra. Zgjeroni kërkimin — ose <b>shtoni shpalljen e parë</b>.</p>`;
     vis.forEach(l=>{
@@ -902,7 +998,7 @@ async function viewListing(){
     if(name===null)return;
     try{
       await addSearch(name||parts.join(" · "),{deal,city,ptype,beds,baths,priceMin,priceMax,areaMin,areaMax,q});
-      toast("Kërkimi u ruajt — do të shihni njoftim kur të shtohen prona që përputhen");
+      toast(T("Kërkimi u ruajt — do të shihni njoftim kur të shtohen prona që përputhen","Search saved. You will get a notification when matching properties are added"));
       renderHeader();
     }catch(err){toast(err.message);}
   });
@@ -977,7 +1073,7 @@ async function viewDetail(id){
           <p class="eyebrow" style="font-size:10px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--accent);margin:0 0 4px">${CITIES[l.city].name}${l.street?` · ${esc(l.street)}${l.houseNo?" "+esc(l.houseNo):""}`:""}</p>
           <h2>${esc(l.title)}</h2>
           <div class="big-price">${priceLabel} ${l.dealType==="sale"&&l.totalArea?`<small>· €${fmt(l.price/l.totalArea)}/m²</small>`:""}</div>
-          ${l.noCommission?`<p style="margin:8px 0 0"><span class="pill-note">Pa komision për ${l.dealType==="sale"?"blerësin":"qiramarrësin"}</span></p>`:""}
+          ${l.noCommission?`<p style="margin:8px 0 0"><span class="pill-note">${T(`Pa komision për ${l.dealType==="sale"?"blerësin":"qiramarrësin"}`,`No commission for the ${l.dealType==="sale"?"buyer":"tenant"}`)}</span></p>`:""}
         </div>
         <div class="panel-box">
           <b style="font-size:13.5px">Kontakti</b>
@@ -1181,8 +1277,8 @@ async function viewAdd(editId){
     $$("#aboutSec [data-only]").forEach(el=>{
       el.style.display=el.dataset.only.split(",").includes(state.propertyType)?"":"none";
     });
-    $("#priceLabel").textContent=state.dealType==="sale"?"Çmimi":"Çmimi i qirasë"+(state.dealType==="rent"?" në muaj":" për natë");
-    $("#noCommLabel").textContent="Pa komision nga "+(state.dealType==="sale"?"blerësi":"qiramarrësi");
+    $("#priceLabel").textContent=state.dealType==="sale"?T("Çmimi","Price"):T("Çmimi i qirasë","Rental price")+(state.dealType==="rent"?T(" në muaj"," per month"):T(" për natë"," per night"));
+    $("#noCommLabel").textContent=T("Pa komision nga ","No commission from ")+(state.dealType==="sale"?T("blerësi","the buyer"):T("qiramarrësi","the tenant"));
   };
   bindChoices("#f-acc","accountType");
   bindChoices("#f-deal","dealType",syncTypeFields);
@@ -1261,7 +1357,7 @@ async function viewAdd(editId){
   renderPhotos();
   const addFiles=files=>{
     [...files].filter(f=>f.type.startsWith("image/")).forEach(f=>{
-      if(state.photos.length>=photoLimit){toast(`Plani juaj lejon deri në ${photoLimit} foto për pronë. Kaloni në një plan më të lartë për më shumë.`);return;}
+      if(state.photos.length>=photoLimit){toast(T(`Plani juaj lejon deri në ${photoLimit} foto për pronë. Kaloni në një plan më të lartë për më shumë.`,`Your plan allows up to ${photoLimit} photos per property. Upgrade to a higher plan for more.`));return;}
       const img=new Image();
       img.onload=()=>{
         const scale=Math.min(1,1280/img.width);
@@ -1334,8 +1430,8 @@ async function viewAdd(editId){
     return rec;
   }
   $("#publishBtn").addEventListener("click",async()=>{
-    if(!validate()){toast("Ju lutemi korrigjoni fushat e theksuara");window.scrollTo?$(".form-page").scrollTo({top:0,behavior:"smooth"}):0;return;}
-    if(state.photos.length<3&&!confirm("Shpalljet me të paktën 3 foto shikohen shumë më tepër. Të publikohet gjithsesi?"))return;
+    if(!validate()){toast(T("Ju lutemi korrigjoni fushat e theksuara","Please fix the highlighted fields"));window.scrollTo?$(".form-page").scrollTo({top:0,behavior:"smooth"}):0;return;}
+    if(state.photos.length<3&&!confirm(T("Shpalljet me të paktën 3 foto shikohen shumë më tepër. Të publikohet gjithsesi?","Listings with at least 3 photos get viewed much more. Publish anyway?")))return;
     try{
       const rec=await save("published");
       toast(editing?"Shpallja u përditësua":"Shpallja u publikua");
@@ -1348,11 +1444,11 @@ async function viewAdd(editId){
   });
   $("#draftBtn").addEventListener("click",async()=>{
     collect();
-    if(!state.totalArea&&!state.price&&!state.lng){toast("Asgjë për të ruajtur ende");return;}
-    try{ await save("draft"); toast("U ruajt te draftet"); location.hash="#/my"; }
+    if(!state.totalArea&&!state.price&&!state.lng){toast(T("Asgjë për të ruajtur ende","Nothing to save yet"));return;}
+    try{ await save("draft"); toast(T("U ruajt te draftet","Saved as draft")); location.hash="#/my"; }
     catch(err){toast(err.message||"Nuk u ruajt — provoni përsëri");}
   });
-  const cb=$("#clearBtn"); if(cb)cb.addEventListener("click",()=>{if(confirm("Të pastrohet i gjithë formulari?"))viewAdd();});
+  const cb=$("#clearBtn"); if(cb)cb.addEventListener("click",()=>{if(confirm(T("Të pastrohet i gjithë formulari?","Clear the whole form?")))viewAdd();});
 }
 
 /* ---------- favorites page ---------- */
@@ -1363,7 +1459,7 @@ function viewFavorites(){
   const favs=allListings().filter(l=>getFavs().includes(l.id)&&l.status==="published");
   v.innerHTML=`<div class="myprops"><div class="inner">
     <h1 style="font-size:20px;margin:0 0 4px">Të preferuarat</h1>
-    <p style="font-size:13px;color:var(--ink-soft);margin:0 0 18px">${favs.length?favs.length+" prona të ruajtura":"Klikoni ♥ te një shpallje për ta ruajtur këtu."}</p>
+    <p style="font-size:13px;color:var(--ink-soft);margin:0 0 18px">${favs.length?T(favs.length+" prona të ruajtura",favs.length+" saved properties"):T("Klikoni ♥ te një shpallje për ta ruajtur këtu.","Click ♥ on a listing to save it here.")}</p>
     <div class="cards" id="favCards"></div>
   </div></div>`;
   const grid=$("#favCards");
@@ -1404,7 +1500,7 @@ function viewSearches(){
       render();
     });
     row.querySelector('[data-a="del"]').addEventListener("click",async()=>{
-      if(!confirm("Ta fshini këtë kërkim?"))return;
+      if(!confirm(T("Ta fshini këtë kërkim?","Delete this search?")))return;
       await removeSearch(s.id); viewSearches(); renderHeader();
     });
     rows.appendChild(row);
@@ -1454,11 +1550,11 @@ async function viewAdmin(){
       <div class="actions"><button class="btn" data-a="view">Shiko</button><button class="btn ghost" data-a="del">Fshi</button></div>`;
     row.querySelector('[data-a="view"]').addEventListener("click",()=>location.hash="#/property/"+l.id);
     row.querySelector('[data-a="del"]').addEventListener("click",async()=>{
-      if(!confirm("Ta fshini këtë shpallje si administrator?"))return;
+      if(!confirm(T("Ta fshini këtë shpallje si administrator?","Delete this listing as administrator?")))return;
       try{
         if(Remote.enabled){await apiCall("/api/admin/listings/"+l.id,"DELETE");Remote.listings=Remote.listings.filter(x=>x.id!==l.id);}
         else Store.saveUserListings(Store.userListings().filter(x=>x.id!==l.id));
-        toast("Shpallja u fshi"); viewAdmin();
+        toast(T("Shpallja u fshi","Listing deleted")); viewAdmin();
       }catch(err){toast(err.message);}
     });
     lrows.appendChild(row);
@@ -1466,16 +1562,16 @@ async function viewAdmin(){
   const urows=$("#admUsers");
   data.users.forEach(x=>{
     const row=document.createElement("div"); row.className="prop-row";
-    row.innerHTML=`<div class="info" style="padding-left:6px"><b>${esc(x.name)} ${x.banned?'<span class="tag draft">PEZULLUAR</span>':""}</b>
-      <span>${esc(x.email)} · ${esc(x.type)} · ${x.listings} shpallje · €${x.balance.toFixed(2)}</span></div>
-      <div class="actions">${x.email===u.email?"":`<button class="btn ghost" data-a="ban">${x.banned?"Aktivizo":"Pezullo"}</button>`}</div>`;
+    row.innerHTML=`<div class="info" style="padding-left:6px"><b>${esc(x.name)} ${x.banned?`<span class="tag draft">${T("PEZULLUAR","SUSPENDED")}</span>`:""}</b>
+      <span>${esc(x.email)} · ${esc(x.type)} · ${T(x.listings+" shpallje",x.listings+" listings")} · €${x.balance.toFixed(2)}</span></div>
+      <div class="actions">${x.email===u.email?"":`<button class="btn ghost" data-a="ban">${T(x.banned?"Aktivizo":"Pezullo",x.banned?"Activate":"Suspend")}</button>`}</div>`;
     const bb=row.querySelector('[data-a="ban"]');
     if(bb)bb.addEventListener("click",async()=>{
-      if(!confirm((x.banned?"Ta aktivizoni":"Ta pezulloni")+" këtë përdorues?"))return;
+      if(!confirm(T((x.banned?"Ta aktivizoni":"Ta pezulloni")+" këtë përdorues?",(x.banned?"Activate":"Suspend")+" this user?")))return;
       try{
         if(Remote.enabled)await apiCall("/api/admin/ban/"+encodeURIComponent(x.email),"POST",{});
         else mutateLocalUser(()=>{const us=Store.users();const t=us.find(z=>z.email===x.email);if(t)t.banned=!t.banned;Store.saveUsers(us);});
-        toast("U përditësua"); viewAdmin();
+        toast(T("U përditësua","Updated")); viewAdmin();
       }catch(err){toast(err.message);}
     });
     urows.appendChild(row);
@@ -1483,51 +1579,64 @@ async function viewAdmin(){
 }
 
 /* ---------- subscription plans page ---------- */
-function viewPlans(){
+function viewPlans(cycle){
   destroyMap();
+  cycle=cycle==="annual"?"annual":"monthly";
   const u=currentUser(); const v=$("#view");
   const cur=planOf(u);
+  const curCycle=(u&&u.planCycle==="annual")?"annual":"monthly";
   v.innerHTML=`<div class="myprops"><div class="inner" style="max-width:860px">
     <h1 style="font-size:20px;margin:0 0 4px">Planet për agjenci dhe pronarë</h1>
-    <p style="font-size:13px;color:var(--ink-soft);margin:0 0 20px">Publikimi bazë është gjithmonë falas. Planet me pagesë hapin më shumë shpallje aktive dhe statistika — paguhen nga bilanci juaj, muaj pas muaji, pa kontrata.</p>
+    <p style="font-size:13px;color:var(--ink-soft);margin:0 0 20px">Publikimi bazë është gjithmonë falas. Planet me pagesë hapin më shumë shpallje aktive dhe statistika — paguhen nga bilanci juaj, pa kontrata.</p>
+    <div class="billing-toggle" role="tablist">
+      <button type="button" data-cycle="monthly" class="${cycle==="monthly"?"active":""}">Mujor</button>
+      <button type="button" data-cycle="annual" class="${cycle==="annual"?"active":""}">Vjetor</button>
+    </div>
     <div class="plan-grid">
-      ${Object.entries(PLANS).map(([k,p])=>`
-      <div class="plan-card ${k==="pro"?"popular":""} ${cur===k?"current":""}">
+      ${Object.entries(PLANS).map(([k,p])=>{
+        const price=cycle==="annual"?p.priceAnnual:p.price;
+        const isCurrent=cur===k&&(k==="free"||curCycle===cycle);
+        const savePct=(cycle==="annual"&&p.price)?Math.floor((1-(p.priceAnnual/(p.price*12)))*100):0;
+        return `
+      <div class="plan-card ${k==="pro"?"popular":""} ${isCurrent?"current":""}">
         ${k==="pro"?'<span class="plan-flag">Më i zgjedhuri</span>':""}
         <h3>${p.name}</h3>
-        <div class="plan-price">${p.price?`${fmt(p.price)} L<small>/muaj</small>`:"0 L"}</div>
+        <div class="plan-price">${price?`${fmt(price)} L<small>${cycle==="annual"?"/vit":"/muaj"}</small>`:"0 L"}${savePct>0?` <span class="save-flag">-${savePct}%</span>`:""}</div>
         <ul>${p.perks.map(x=>`<li>${x}</li>`).join("")}</ul>
-        ${cur===k?`<button class="btn" disabled style="width:100%;justify-content:center">Plani aktual</button>`
+        ${isCurrent?`<button class="btn" disabled style="width:100%;justify-content:center">Plani aktual</button>`
           :k==="free"?`<button class="btn" data-plan-cancel style="width:100%;justify-content:center">${u&&u.planCancelled?"Anulohet në skadim":"Kalo në Falas"}</button>`
-          :`<button class="btn primary" data-plan="${k}" style="width:100%;justify-content:center">Zgjidh ${p.name}</button>`}
-      </div>`).join("")}
+          :`<button class="btn primary" data-plan="${k}" data-cycle-pick="${cycle}" style="width:100%;justify-content:center">Zgjidh ${p.name}</button>`}
+      </div>`;}).join("")}
     </div>
-    ${u&&cur!=="free"&&u.planExpiresAt?`<p style="font-size:12px;color:var(--ink-faint);margin-top:14px">Plani juaj ${PLANS[cur].name} ${u.planCancelled?"përfundon":"rinovohet automatikisht"} më ${new Date(u.planExpiresAt).toLocaleDateString("sq-AL")}. ${u.planCancelled?"":"Mund ta anuloni kurdo — mbetet aktiv deri në skadim."}</p>`:""}
+    ${u&&cur!=="free"&&u.planExpiresAt?`<p style="font-size:12px;color:var(--ink-faint);margin-top:14px">Plani juaj ${PLANS[cur].name} (${curCycle==="annual"?"vjetor":"mujor"}) ${u.planCancelled?"përfundon":"rinovohet automatikisht"} më ${new Date(u.planExpiresAt).toLocaleDateString("sq-AL")}. ${u.planCancelled?"":"Mund ta anuloni kurdo — mbetet aktiv deri në skadim."}</p>`:""}
     <p style="font-size:12px;color:var(--ink-faint)">Pagesa bëhet nga <a href="#/balance" style="color:var(--accent);font-weight:600">bilanci juaj</a> (PayPal, kriptomonedhë). Nëse bilanci nuk mjafton në rinovim, plani kthehet automatikisht në Falas — shpalljet ekzistuese nuk fshihen.</p>
   </div></div>`;
+  $$("[data-cycle]",v).forEach(b=>b.addEventListener("click",()=>viewPlans(b.dataset.cycle)));
   $$("[data-plan]",v).forEach(b=>b.addEventListener("click",async()=>{
     if(!u){authModal("login");return;}
-    const k=b.dataset.plan;
-    if(!confirm(`Të aktivizohet plani ${PLANS[k].name} për ${fmt(PLANS[k].price)} L/muaj nga bilanci juaj?`))return;
+    const k=b.dataset.plan; const pickCycle=b.dataset.cyclePick==="annual"?"annual":"monthly";
+    const price=pickCycle==="annual"?PLANS[k].priceAnnual:PLANS[k].price;
+    if(!confirm(T(`Të aktivizohet plani ${PLANS[k].name} (${pickCycle==="annual"?"vjetor":"mujor"}) për ${fmt(price)} L${pickCycle==="annual"?"/vit":"/muaj"} nga bilanci juaj?`,`Activate the ${PLANS[k].name} plan (${pickCycle==="annual"?"annual":"monthly"}) for ${fmt(price)} L${pickCycle==="annual"?"/year":"/month"} from your balance?`)))return;
     try{
       if(Remote.enabled){
-        const j=await apiCall("/api/plan","POST",{plan:k}); Remote.user=j.user;
+        const j=await apiCall("/api/plan","POST",{plan:k,cycle:pickCycle}); Remote.user=j.user;
       } else {
-        if(balanceOf(currentUser())<PLANS[k].price){toast(`Bilanci nuk mjafton (${fmt(PLANS[k].price)} L nevojiten). Rimbusheni te Bilanci.`);return;}
-        localCredit(u.email,-PLANS[k].price,"subscription",`Plani ${PLANS[k].name} · 30 ditë`);
-        mutateLocalUser(x=>{x.plan=k;x.planExpiresAt=Date.now()+30*86400000;x.planCancelled=false;});
+        if(balanceOf(currentUser())<price){toast(T(`Bilanci nuk mjafton (${fmt(price)} L nevojiten). Rimbusheni te Bilanci.`,`Balance not enough (${fmt(price)} L needed). Top up your Balance.`));return;}
+        const days=pickCycle==="annual"?365:30;
+        localCredit(u.email,-price,"subscription",`Plani ${PLANS[k].name} · ${days} ditë`);
+        mutateLocalUser(x=>{x.plan=k;x.planCycle=pickCycle;x.planExpiresAt=Date.now()+days*86400000;x.planCancelled=false;});
       }
-      toast(`Plani ${PLANS[k].name} u aktivizua`); renderHeader(); viewPlans();
+      toast(T(`Plani ${PLANS[k].name} u aktivizua`,`${PLANS[k].name} plan activated`)); renderHeader(); viewPlans(pickCycle);
     }catch(err){toast(err.message);}
   }));
   const pc=$("[data-plan-cancel]",v);
   if(pc)pc.addEventListener("click",async()=>{
     if(!u||cur==="free")return;
-    if(!confirm("Plani mbetet aktiv deri në skadim dhe pastaj kalon në Falas. Të vazhdohet?"))return;
+    if(!confirm(T("Plani mbetet aktiv deri në skadim dhe pastaj kalon në Falas. Të vazhdohet?","The plan stays active until it expires and then switches to Free. Continue?")))return;
     try{
       if(Remote.enabled){const j=await apiCall("/api/plan/cancel","POST",{});Remote.user=j.user;}
       else mutateLocalUser(x=>{x.planCancelled=true;});
-      toast("Rinovimi u anulua"); viewPlans();
+      toast(T("Rinovimi u anulua","Renewal cancelled")); viewPlans();
     }catch(err){toast(err.message);}
   });
   attachFooter($(".myprops .inner",v));
@@ -1580,7 +1689,7 @@ function viewBalance(){
   $$(".choice[data-amt]",v).forEach(b=>b.addEventListener("click",()=>{$("#topupAmt").value=b.dataset.amt;}));
   const amt=()=>Math.max(1,Math.round(+$("#topupAmt").value||0));
   const fail=m=>{const e=$("#payErr");e.textContent=m;e.style.display="block";};
-  const done=()=>{toast("Bilanci u rimbush");renderHeader();viewBalance();};
+  const done=()=>{toast(T("Bilanci u rimbush","Balance topped up"));renderHeader();viewBalance();};
 
   if(paypalLive){
     const mount=()=>{
@@ -1591,14 +1700,14 @@ function viewBalance(){
           try{const j=await apiCall("/api/pay/capture","POST",{orderId:data.orderID});Remote.user=j.user;done();}
           catch(err){fail(err.message);}
         },
-        onError:()=>fail("PayPal nuk mundi ta përfundojë pagesën — provoni përsëri."),
+        onError:()=>fail(T("PayPal nuk mundi ta përfundojë pagesën — provoni përsëri.","PayPal couldn't complete the payment — try again.")),
       }).render("#ppButtons");
     };
     if(window.paypal) mount();
     else{
       const s=document.createElement("script");
       s.src=`https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(Remote.payments.clientId)}&currency=EUR`;
-      s.onload=mount; s.onerror=()=>fail("Nuk u ngarkua PayPal — kontrolloni lidhjen dhe rifreskoni.");
+      s.onload=mount; s.onerror=()=>fail(T("Nuk u ngarkua PayPal — kontrolloni lidhjen dhe rifreskoni.","PayPal failed to load — check your connection and refresh."));
       document.head.appendChild(s);
     }
   }
@@ -1612,12 +1721,12 @@ function viewBalance(){
           const j=await apiCall("/api/pay/crypto/create","POST",{amount:amt()});
           pendingCode=j.code;
           window.open(j.url,"_blank","noopener");
-          btn.textContent="Kontrollo pagesën";
-          setSt("Arka e Coinbase Commerce u hap në një dritare të re. Pasi të paguani, klikoni \"Kontrollo pagesën\".");
+          btn.textContent=T("Kontrollo pagesën","Check payment");
+          setSt(T("Arka e Coinbase Commerce u hap në një dritare të re. Pasi të paguani, klikoni \"Kontrollo pagesën\".","The Coinbase Commerce checkout opened in a new window. After paying, click \"Check payment\"."));
         } else {
           const j=await apiCall("/api/pay/crypto/check","POST",{code:pendingCode});
           if(j.status==="credited"){Remote.user=j.user;pendingCode=null;done();}
-          else setSt("Pagesa ende s'është konfirmuar në zinxhir (statusi: "+j.status+"). Provoni përsëri pas ~1 minute.");
+          else setSt(T("Pagesa ende s'është konfirmuar në zinxhir (statusi: "+j.status+"). Provoni përsëri pas ~1 minute.","Payment not yet confirmed on-chain (status: "+j.status+"). Try again in ~1 minute."));
         }
       }catch(err){fail(err.message);}
     });
@@ -1627,7 +1736,7 @@ function viewBalance(){
     demoBtn.addEventListener("click",async()=>{
       try{
         if(Remote.enabled){const j=await apiCall("/api/pay/demo-topup","POST",{amount:amt()});Remote.user=j.user;}
-        else localCredit(u.email,amt(),"topup","Rimbushje demo (pa pagesë reale)");
+        else localCredit(u.email,amt(),"topup",T("Rimbushje demo (pa pagesë reale)","Demo top-up (no real payment)"));
         done();
       }catch(err){fail(err.message);}
     });
@@ -1642,9 +1751,9 @@ function viewMy(){
   const mine=(Remote.enabled?Remote.listings:Store.userListings()).filter(l=>l.owner===u.email).sort((a,b)=>b.createdAt-a.createdAt);
   const plan=planOf(u);
   v.innerHTML=`<div class="myprops"><div class="inner">
-    <h1 style="font-size:20px;margin:0 0 4px">Pronat e mia</h1>
-    <p style="font-size:13px;color:var(--ink-soft);margin:0 0 6px">${mine.length?`${mine.length} shpallje · keni hyrë si ${esc(u.email)}`:"Nuk keni shtuar ende asnjë pronë."}</p>
-    <p style="font-size:12.5px;margin:0 0 18px">Plani: <b>${PLANS[plan].name}</b> · ${mine.filter(l=>l.status==="published").length}/${PLANS[plan].listings} shpallje aktive · <a href="#/plans" style="color:var(--accent);font-weight:600">${plan==="free"?"përmirëso planin":"menaxho planin"}</a></p>
+    <h1 style="font-size:20px;margin:0 0 4px">${T("Pronat e mia","My properties")}</h1>
+    <p style="font-size:13px;color:var(--ink-soft);margin:0 0 6px">${mine.length?T(`${mine.length} shpallje · keni hyrë si ${esc(u.email)}`,`${mine.length} listings · logged in as ${esc(u.email)}`):T("Nuk keni shtuar ende asnjë pronë.","You haven't added any property yet.")}</p>
+    <p style="font-size:12.5px;margin:0 0 18px">${T("Plani:","Plan:")} <b>${T(PLANS[plan].name,I18N[PLANS[plan].name]||PLANS[plan].name)}</b> · ${T(`${mine.filter(l=>l.status==="published").length}/${PLANS[plan].listings} shpallje aktive`,`${mine.filter(l=>l.status==="published").length}/${PLANS[plan].listings} active listings`)} · <a href="#/plans" style="color:var(--accent);font-weight:600">${T(plan==="free"?"përmirëso planin":"menaxho planin",plan==="free"?"upgrade plan":"manage plan")}</a></p>
     <div id="rows"></div>
     <button class="btn primary" data-go="#/add">+ Shto pronë</button>
   </div></div>`;
@@ -1655,8 +1764,8 @@ function viewMy(){
     row.innerHTML=`<img src="${l.photos[0]||svgThumb(3)}" alt="">
       <div class="info"><b>${esc(l.title)}</b>
         <span>${CITIES[l.city].name} · ${DEALS[l.dealType]} · €${fmt(l.price)}${l.dealType==="rent"?"/muaj":l.dealType==="daily"?"/natë":""} ${l.status==="draft"?'· <span class="tag draft">DRAFT</span>':""} ${(l.promoBid||0)>0?`· <span class="tag promo">Promovuar €${l.promoBid}/ditë</span>`:""}</span>
-        <span class="lead-stats" title="Shikime · Telefonata të shfaqura · Klikime WhatsApp">👁 ${fmt(s.v||0)} · 📞 ${fmt(s.p||0)} · 💬 ${fmt(s.w||0)}
-          ${plan!=="free"?`<button class="stats-toggle" type="button" data-stats="${l.id}">statistika ↓</button>`:`<a href="#/plans" class="stats-teaser">statistika ditore me Pro →</a>`}</span>
+        <span class="lead-stats" title="${T("Shikime · Telefonata të shfaqura · Klikime WhatsApp","Views · Phone reveals · WhatsApp clicks")}">👁 ${fmt(s.v||0)} · 📞 ${fmt(s.p||0)} · 💬 ${fmt(s.w||0)}
+          ${plan!=="free"?`<button class="stats-toggle" type="button" data-stats="${l.id}">${T("statistika ↓","stats ↓")}</button>`:`<a href="#/plans" class="stats-teaser">${T("statistika ditore me Pro →","daily stats with Pro →")}</a>`}</span>
         <span class="stats-panel" id="stats-${esc(l.id)}" hidden></span></div>
       <div class="actions">
         ${l.status==="draft"?`<button class="btn" data-a="publish">Publiko</button>`:`<button class="btn" data-a="view">Shiko</button>`}
@@ -1665,12 +1774,12 @@ function viewMy(){
     row.querySelector('[data-a="edit"]').addEventListener("click",()=>location.hash="#/add?edit="+l.id);
     const del=row.querySelector('[data-a="del"]');
     del.addEventListener("click",async()=>{
-      if(!confirm("Ta fshini këtë shpallje përgjithmonë?"))return;
+      if(!confirm(T("Ta fshini këtë shpallje përgjithmonë?","Delete this listing permanently?")))return;
       try{
         if(Remote.enabled){await apiCall("/api/listings/"+l.id,"DELETE");Remote.listings=Remote.listings.filter(x=>x.id!==l.id);}
         else Store.saveUserListings(Store.userListings().filter(x=>x.id!==l.id));
-        viewMy(); toast("Shpallja u fshi");
-      }catch(err){toast(err.message||"Nuk u fshi dot");}
+        viewMy(); toast(T("Shpallja u fshi","Listing deleted"));
+      }catch(err){toast(err.message||T("Nuk u fshi dot","Couldn't delete"));}
     });
     const vb=row.querySelector('[data-a="view"]'); if(vb)vb.addEventListener("click",()=>location.hash="#/property/"+l.id);
     const pb=row.querySelector('[data-a="publish"]'); if(pb)pb.addEventListener("click",async()=>{
@@ -1682,13 +1791,13 @@ function viewMy(){
           const all=Store.userListings(); const i=all.findIndex(x=>x.id===l.id); all[i].status="published";
           Store.saveUserListings(all);
         }
-        viewMy(); toast("Shpallja u publikua");
-      }catch(err){toast(err.message||"Nuk u publikua dot");}
+        viewMy(); toast(T("Shpallja u publikua","Listing published"));
+      }catch(err){toast(err.message||T("Nuk u publikua dot","Couldn't publish"));}
     });
     const st=row.querySelector("[data-stats]");
     if(st)st.addEventListener("click",()=>{
       const panel=row.querySelector(".stats-panel");
-      if(!panel.hidden){panel.hidden=true;st.textContent="statistika ↓";return;}
+      if(!panel.hidden){panel.hidden=true;st.textContent=T("statistika ↓","stats ↓");return;}
       const daily=l.statsDaily||{};
       const days=[...Array(14)].map((_,i)=>{
         const d=new Date(Date.now()-(13-i)*86400000).toISOString().slice(0,10);
@@ -1696,9 +1805,9 @@ function viewMy(){
       });
       const max=Math.max(1,...days.map(x=>x.v));
       panel.innerHTML=`<span class="stats-bars">${days.map(x=>
-        `<i title="${x.d}: ${x.v} shikime, ${x.p} tel, ${x.w} WA"><b style="height:${Math.round(x.v/max*34)+2}px"></b><u>${x.d.slice(8)}</u></i>`).join("")}</span>
-        <span class="stats-note">Shikime në 14 ditët e fundit · gjithsej: ${fmt((l.stats||{}).v||0)} shikime, ${fmt((l.stats||{}).p||0)} telefonata, ${fmt((l.stats||{}).w||0)} WhatsApp</span>`;
-      panel.hidden=false; st.textContent="statistika ↑";
+        `<i title="${x.d}: ${x.v} ${T("shikime","views")}, ${x.p} ${T("tel","calls")}, ${x.w} WA"><b style="height:${Math.round(x.v/max*34)+2}px"></b><u>${x.d.slice(8)}</u></i>`).join("")}</span>
+        <span class="stats-note">${T(`Shikime në 14 ditët e fundit · gjithsej: ${fmt((l.stats||{}).v||0)} shikime, ${fmt((l.stats||{}).p||0)} telefonata, ${fmt((l.stats||{}).w||0)} WhatsApp`,`Views over the last 14 days · total: ${fmt((l.stats||{}).v||0)} views, ${fmt((l.stats||{}).p||0)} calls, ${fmt((l.stats||{}).w||0)} WhatsApp`)}</span>`;
+      panel.hidden=false; st.textContent=T("statistika ↑","stats ↑");
     });
     rows.appendChild(row);
   });
